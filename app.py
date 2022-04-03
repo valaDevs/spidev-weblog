@@ -1,8 +1,19 @@
 from flask import Flask, render_template
+from flask_wtf import FlaskForm
+from wtforms import StringField,SubmitField
+from wtforms.validators import DataRequired
 import random
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = "supersecret001"
+
+# Create Form Class
+class NamerForm(FlaskForm):
+    name = StringField("What is your name : " , validators=[DataRequired()])
+    submit = SubmitField("submit")
+    
+    
 @app.route('/')
 def index():
     names = ["vala",'ali',"reza","gholi"]
@@ -12,9 +23,9 @@ def index():
     
     return render_template('index.html',names = rnd, stuff=stuff, foods = foods)
 
-@app.route("/user/<name>")
+@app.route('/user/<name>')
 def user(name):
-    return render_template("user.html", name = name)
+    return render_template('user.html', user_name = name)
 
 # create custom error pages
 @app.errorhandler(404)
