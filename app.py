@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField
 from wtforms.validators import DataRequired
@@ -19,6 +19,7 @@ def index():
     names = ["vala",'ali',"reza","gholi"]
     foods = ["pizza", "burger","salad","pasta","sandwich",12]
     rnd = random.choice(names)
+    flash("Welcome to our website ! ")
     stuff = "this is a <b>bold</b> text "
     
     return render_template('index.html',names = rnd, stuff=stuff, foods = foods)
@@ -35,6 +36,18 @@ def not_found(e):
 @app.errorhandler(500)
 def not_found(e):
     return render_template("error_500.html"), 500
+
+@app.route("/name",methods=["GET","POST"])
+def name():
+    
+    name = None 
+    form = NamerForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        form.name.data = ''
+        flash(" Form submitted Successfuly ! ")
+        
+    return render_template('name.html', name = name , form = form)
 
 if __name__ == "__main__":
     app.run(debug=True)
